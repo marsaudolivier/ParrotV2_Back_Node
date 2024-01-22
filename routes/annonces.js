@@ -24,7 +24,7 @@ router.get('/:id', (req, res) => {
     }
   });
 });
-//recupération des annonces avec inner join voiture Id_voitures
+//recupération des annonces avec inner join voiture Id_voitures + marques + modeles
 router.get('/voiture/:id', (req, res) => {
   const id = req.params.id;
   pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_voitures = Voitures.Id_voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles WHERE Annonces.Id_voitures = ? ', id, (error, results, fields) => {
@@ -35,6 +35,29 @@ router.get('/voiture/:id', (req, res) => {
     }
   });
 });
+//Effacé annonces par id
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  pool.query('DELETE FROM `Annonces` WHERE Id_annonces = ? ', id, (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json({ message: 'Annonces effacé avec succès!' });
+    }
+  });
+});
+//Ajout d'une annonces 
+router.post('/', (req, res) => {
+  const data = req.body;
+  pool.query('INSERT INTO `Annonces` SET ?', data, (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json({ message: 'Annonces ajouté avec succès!' });
+    }
+  });
+});
+
 
 
 module.exports = router;
