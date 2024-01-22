@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db'); // Updated the path
 
-// Récupérer tous les film
+// Récupérer tous les avoir
 router.get('/', (req, res) => {
   pool.query('SELECT * FROM `avoir`', (error, results, fields) => {
     if (error) {
