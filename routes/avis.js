@@ -5,7 +5,7 @@ const pool = require('../config/db'); // Updated the path
 
 // Récupérer tous les avis
 router.get('/', (req, res) => {
-  pool.query('SELECT * FROM `consommer`', (error, results, fields) => {
+  pool.query('SELECT * FROM `Avis`', (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
     } else {
