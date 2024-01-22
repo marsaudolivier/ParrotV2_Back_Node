@@ -8,9 +8,14 @@ const createError = require('http-errors');
 const cors = require('cors');
 app.use(cors());
 app.use(bodyParser.json());
-const complexesRouter = require('./routes/complexes');
+
+//configuration des fichiez routes
+const annoncesRouter = require('./routes/annonces');
 const employerRouter = require('./routes/employer');
-const filmRouter = require('./routes/film');
+const avisRouter = require('./routes/avis');
+const avoirRouter = require('./routes/avoir');
+const consommerRouter = require('./routes/consommer');
+const energiesRouter = require('./routes/energies');
 const indexRouter = require('./routes/index');
 
 app.set('views', path.join(__dirname, 'views'));
@@ -22,10 +27,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//configuration des routes
 app.use('/', indexRouter);
-app.use('/complexes', complexesRouter);
-app.use('/employer', employerRouter);
-app.use('/film', filmRouter);
+app.use('/annonces', annoncesRouter);
+app.use('/utilisateurs', employerRouter);
+app.use('/Avis', avisRouter);
+app.use('/Avoir', avoirRouter);
+app.use('/Consommer', consommerRouter);
+app.use('/Energies', energiesRouter);
+
+
 app.use(function(req, res, next) {
   next(createError(404));
 });

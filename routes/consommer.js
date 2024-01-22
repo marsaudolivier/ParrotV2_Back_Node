@@ -5,7 +5,7 @@ const pool = require('../config/db'); // Updated the path
 
 // Récupérer tous les complexes
 router.get('/', (req, res) => {
-  pool.query('SELECT * FROM `complexes`', (error, results, fields) => {
+  pool.query('SELECT * FROM consommer', (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
     } else {
