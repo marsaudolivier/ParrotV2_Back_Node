@@ -18,7 +18,7 @@ const consommerRouter = require('./routes/consommer');
 const energiesRouter = require('./routes/energies');
 const indexRouter = require('./routes/index');
 const formulairesRouter = require('./routes/formulaires');
-
+const joursRouter = require('./routes/jours');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -38,6 +38,7 @@ app.use('/Avoir', avoirRouter);
 app.use('/Consommer', consommerRouter);
 app.use('/Energies', energiesRouter);
 app.use('/Formulaires', formulairesRouter);
+app.use('/Jours', joursRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
