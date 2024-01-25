@@ -23,6 +23,7 @@ const photosRouter = require('./routes/photos')
 const servicesRouter = require('./routes/services')
 const motifsRouter = require('./routes/motifs')
 const optionsRouter = require('./routes/options')
+const connectRouter = require('./routes/connect')
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -47,6 +48,7 @@ app.use('/Photos', photosRouter);
 app.use('/Services', servicesRouter);
 app.use('/Motifs', motifsRouter);
 app.use('/Options', optionsRouter);
+app.use('/Connect', connectRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
