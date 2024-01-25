@@ -50,11 +50,30 @@ router.delete('/:id', (req, res) => {
 // Ajouter un nouveau utilisateur 
 router.post('/', (req, res) => {
   const data = req.body;
-  pool.query('INSERT INTO `Utilisateurs` SET ?', data, (error, results, fields) => {
-    if (error) {
-      res.json({ message: error.message });
+  // Vérifier si les champs sont vides
+  if (!data.nom|| !data.prenom || !data.mail || !data.mdp || !data.Id_Roles) {
+    res.json({ message: 'Veuillez remplir tous les champs' });
+  }
+  //Hash de a variable data.mdp etquivalent a $mdp = password_hash($mdp, PASSWORD_DEFAULT); sur php
+  const bcrypt = require('bcrypt');
+  const saltRounds = 10;
+  const myPlaintextPassword = data.mdp;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(myPlaintextPassword, salt);
+  data.mdp = hash;
+  // Vérifier si l'utilisateur existe déjà
+  pool.query('SELECT * FROM `Utilisateurs` WHERE `mail` = ?', data.mail, (error, results, fields) => {
+    if (results.length > 0) {
+      res.json({ message: 'Utilisateur existe déjà!' });
     } else {
-      res.json({ message: 'Utilisateur ajouté avec succès!' });
+      // Insertion des données
+      pool.query('INSERT INTO `Utilisateurs` SET ?', data, (error, results, fields) => {
+        if (error) {
+          res.json({ message: error.message });
+        } else {
+          res.json({ message: 'Utilisateur ajouté avec succès!' });
+        }
+      });
     }
   });
 });
