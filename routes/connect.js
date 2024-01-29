@@ -20,8 +20,8 @@ router.post('/', (req, res) => {
         if (result == true) {
           const token = generateToken();
           pool.query('UPDATE Utilisateurs SET token = ? WHERE mail = ?', [token, mail]);
-          res.cookie('mail', mail, { maxAge: 900000, httpOnly: true });
-          res.cookie('token', token, { maxAge: 900000, httpOnly: true });
+          res.cookie('mail', mail, { maxAge: 3600, httpOnly: true });
+          res.cookie('token', token, { maxAge: 3600, httpOnly: true });
 
           res.json({ message: 'Connexion réussie', token });
         } else {
