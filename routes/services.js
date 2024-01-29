@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 //recupération des  Services par id
 router.get('/:id', (req, res) => {
   const id = req.params.id;
-  pool.query('SELECT * FROM Services WHERE Services = ? ', id, (error, results, fields) => {
+  pool.query('SELECT * FROM Services WHERE Id_Services = ? ', id, (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
     } else {
