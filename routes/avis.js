@@ -13,6 +13,17 @@ router.get('/', (req, res) => {
     }
   });
 });
+//affiche uniquement les deux dernier
+router.get('/last ', (req, res) => {
+  pool.query('SELECT * FROM `Avis` ORDER BY id DESC LIMIT 2', (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json(results);
+    }
+  });
+}
+);
 
 
 module.exports = router;
