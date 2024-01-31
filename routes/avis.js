@@ -24,6 +24,42 @@ router.get('/last', (req, res) => {
   });
 }
 );
+// Ajouter un nouvel avis
+router.post('/', (req, res) => {
+  const avis = req.body;
+  pool.query('INSERT INTO `Avis` SET ?', avis, (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      avis.id = results.insertId;
+      res.json(avis);
+    }
+  });
+});
+// Mettre à jour un avis existant
+router.put('/:id', (req, res) => {
+  const avis = req.body;
+  const id = req.params.id;
+  pool.query('UPDATE `Avis` SET ? WHERE Id_Avis = ?', [avis, id], (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      avis.id = +id;
+      res.json(avis);
+    }
+  });
+});
+// Supprimer un avis
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  pool.query('DELETE FROM `Avis` WHERE Id_Avis = ?', id, (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json({ message: `Avis ${id} supprimé` });
+    }
+  });
+});
 
 
 module.exports = router;
