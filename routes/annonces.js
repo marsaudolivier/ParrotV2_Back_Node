@@ -5,7 +5,7 @@ const pool = require('../config/db'); // Updated the path
 
 // Récupérer tous les complexes
 router.get('/', (req, res) => {
-  pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_Voitures = Voitures.Id_Voitures', (error, results, fields) => {
+  pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_Voitures = Voitures.Id_Voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles ', (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
     } else {
