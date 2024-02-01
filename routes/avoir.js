@@ -13,6 +13,17 @@ router.get('/', (req, res) => {
     }
   });
 });
+//recupération des avoir par Id_Vehicules
+router.get('/:id', (req, res) => {
+  const id = req.params.id;
+  pool.query('SELECT * FROM `avoir`  INNER JOIN Options ON Options.Id_Options = avoir.Id_Options WHERE Id_Vehicules = ? ', id, (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json(results);
+    }
+  });
+});
 
 
 
