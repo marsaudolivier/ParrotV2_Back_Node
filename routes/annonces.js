@@ -35,9 +35,9 @@ router.get('/voiture/:id', (req, res) => {
     }
   });
 });
-//recupération des annonces avec inner join voiture  + marques + modeles 
-router.get('/voitures', (req, res) => {
-  pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_voitures = Voitures.Id_voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles', (error, results, fields) => {
+//recupération toutes les  annonces avec inner join voiture  + marques + modeles 
+router.get('/voiture', (req, res) => {
+  pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_voitures = Voitures.Id_voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles ', (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
     } else {
@@ -45,6 +45,7 @@ router.get('/voitures', (req, res) => {
     }
   });
 });
+
 //Effacé annonces par id
 router.delete('/:id', (req, res) => {
   const id = req.params.id;
