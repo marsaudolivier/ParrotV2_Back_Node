@@ -35,7 +35,7 @@ router.get('/voiture/:id', (req, res) => {
     }
   });
 });
-//recupération des annonces avec inner join voiture  + marques + modeles
+//recupération des annonces avec inner join voiture  + marques + modeles 
 router.get('/voitures', (req, res) => {
   const id = req.params.id;
   pool.query('SELECT * FROM `Annonces`', id, (error, results, fields) => {
