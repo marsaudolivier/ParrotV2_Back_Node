@@ -38,7 +38,7 @@ router.get('/voiture/:id', (req, res) => {
 //recupération des annonces avec inner join voiture  + marques + modeles
 router.get('/voitures', (req, res) => {
   const id = req.params.id;
-  pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_voitures = Voitures.Id_voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles', id, (error, results, fields) => {
+  pool.query('SELECT A.* , V.Id_marque as Id_marque, V.Id_modele as Id_modele, M.Nom_marque as Nom_marque, Mo.Nom_modele as Nom_modele FROM Annonces A INNER JOIN Voitures V ON A.Id_voitures = V.Id_voitures INNER JOIN Marques M ON V.Id_marque = M.Id_marque INNER JOIN Modeles Mo ON V.Id_modele = Mo.Id_modele', id, (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
     } else {
