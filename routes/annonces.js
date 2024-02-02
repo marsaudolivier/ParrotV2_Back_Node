@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage }).array('photo_principal',10);
-router.post('/', (req, res) => {
+router.post('/Voitures', (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       return res.json({ message: err.message });
@@ -47,11 +47,19 @@ router.post('/', (req, res) => {
     });
   });
 });
-
-
-
-
-
+//Ajout annonces
+router.post('/', (req, res) => {
+  const data = req.body;
+  pool.query('INSERT INTO `Annonces` SET ?', data, (error, results, fields) => {
+    if (!error) {
+      res.json({ message: 'Annonces ajouté avec succès!' });
+    }
+    else {
+      res.json({ message: error.message });
+    }
+  }
+  );
+});
 //recupération des  annonces par id
 router.get('/:id', (req, res) => {
   const id = req.params.id;
