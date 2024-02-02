@@ -49,6 +49,9 @@ router.post('/Voitures', (req, res) => {
 });
 //Ajout annonces
 router.post('/', (req, res) => {
+  //config date_publication = dateactuelle
+  req.body.date_publication = new Date();
+  //Envoi des données vers la BDD
   const data = req.body;
   pool.query('INSERT INTO `Annonces` SET ?', data, (error, results, fields) => {
     if (!error) {
