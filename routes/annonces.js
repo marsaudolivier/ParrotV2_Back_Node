@@ -98,17 +98,7 @@ router.delete('/:id', (req, res) => {
     }
   });
 });
-//Ajout d'une annonces 
-router.post('/', (req, res) => {
-  const data = req.body;
-  pool.query('INSERT INTO `Annonces` SET ?', data, (error, results, fields) => {
-    if (error) {
-      res.json({ message: error.message });
-    } else {
-      res.json({ message: 'Annonces ajouté avec succès!' });
-    }
-  });
-});
+
 
 
 
