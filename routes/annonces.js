@@ -37,7 +37,13 @@ router.post('/', (req, res) => {
 
     // Ajouter l'adresse de la première photo à la colonne photo_principal
     const data = { ...req.body, photo_principal: photoAddresses[0] };
-
+    pool.query('INSERT INTO `Anonces` SET ?', data, (error, results, fields) => {
+      if (error) {
+        res.json({ message: error.message });
+      } else {
+        res.json({ message: 'Annonces ajouté avec succès!' });
+      }
+    });
     // Insérer les données dans la base de données
     pool.query('INSERT INTO `Voitures` SET ?', data, (error, results, fields) => {
       if (error) {
