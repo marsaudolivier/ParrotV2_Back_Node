@@ -8,7 +8,7 @@ const createError = require('http-errors');
 const cors = require('cors');
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use('/public', express.static(path.join(__dirname, 'public')));
 //configuration des fichiez routes
 const annoncesRouter = require('./routes/annonces');
 const employerRouter = require('./routes/employer');
