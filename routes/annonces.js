@@ -37,31 +37,40 @@ router.post('/Voitures', (req, res) => {
 
     // Ajouter l'adresse de la première photo à la colonne photo_principal
     const data = { ...req.body, photo_principal: photoAddresses[0] };
+    //recupération des données de la voiture
+    const voiture = {
+      Id_Marques: data.Id_Marques,
+      Id_Modeles: data.Id_Modeles,
+      Annee: data.annee,
+      Kilometrage: data.kilometrage,
+      Prix: data.prix,
+      photo_principal: data.photo_principal
+    };
     // Insérer les données dans la base de données
-    pool.query('INSERT INTO `Voitures` SET ?', data, (error, results, fields) => {
+    pool.query('INSERT INTO `Voitures` SET ?', voiture, (error, results, fields) => {
       if (error) {
         res.json({ message: error.message });
       } else {
         res.json({ message: 'Annonces ajouté avec succès!' });
+        //récupération de l'id de la voiture
+        const id_voiture = results.insertId;
+        //recupération des données de l'annonce date = date du moment
+        const annonce = {
+          Id_Voitures: id_voiture,
+          date_publication: new Date(), 
+          titre: data.titre
+        };
+        // Insérer les données dans la base de données
+        pool.query('INSERT INTO `Annonces` SET ?', annonce, (error, results, fields) => {
+          if (error) {
+            res.json({ message: error.message });
+          } else {
+            res.json({ message: 'Annonces ajouté avec succès!' });
+          }
+        });
       }
     });
   });
-});
-//Ajout annonces
-router.post('/', (req, res) => {
-  //config date_publication = dateactuelle
-  req.body.date_publication = new Date();
-  //Envoi des données vers la BDD
-  const data = req.body;
-  pool.query('INSERT INTO `Annonces` SET ?', data, (error, results, fields) => {
-    if (!error) {
-      res.json({ message: 'Annonces ajouté avec succès!' });
-    }
-    else {
-      res.json({ message: error.message });
-    }
-  }
-  );
 });
 //recupération des  annonces par id
 router.get('/:id', (req, res) => {
