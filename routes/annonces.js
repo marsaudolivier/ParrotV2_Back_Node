@@ -32,12 +32,9 @@ router.post('/Voitures', (req, res) => {
       return res.json({ message: err.message });
     }
 
-    // Récupérer l'adresse de la photo
     const photoAddresses = req.files.map(file => `${file.filename}`);
-
-    // Ajouter l'adresse de la première photo à la colonne photo_principal
     const data = { ...req.body, photo_principal: photoAddresses[0] };
-    //recupération des données de la voiture
+
     const voiture = {
       Id_Marques: data.Id_Marques,
       Id_Modeles: data.Id_Modeles,
@@ -46,29 +43,26 @@ router.post('/Voitures', (req, res) => {
       Prix: data.prix,
       photo_principal: data.photo_principal
     };
-    // Insérer les données dans la base de données
+
     pool.query('INSERT INTO `Voitures` SET ?', voiture, (error, results, fields) => {
       if (error) {
-        res.json({ message: error.message });
-      } else {
-        res.json({ message: 'Annonces ajouté avec succès!' });
-        //récupération de l'id de la voiture
-        const id_voiture = results.insertId;
-        //recupération des données de l'annonce date = date du moment
-        const annonce = {
-          Id_Voitures: id_voiture,
-          date_publication: new Date(), 
-          titre: data.titre
-        };
-        // Insérer les données dans la base de données
-        pool.query('INSERT INTO `Annonces` SET ?', annonce, (error, results, fields) => {
-          if (error) {
-            res.json({ message: error.message });
-          } else {
-            res.json({ message: 'Annonces ajouté avec succès!' });
-          }
-        });
+        return res.json({ message: error.message });
       }
+
+      const id_voiture = results.insertId;
+      const annonce = {
+        Id_Voitures: id_voiture,
+        date_publication: new Date(),
+        titre: data.titre
+      };
+
+      pool.query('INSERT INTO `Annonces` SET ?', annonce, (error, results, fields) => {
+        if (error) {
+          return res.json({ message: error.message });
+        }
+
+        res.json({ message: 'Annonces ajouté avec succès!' });
+      });
     });
   });
 });
