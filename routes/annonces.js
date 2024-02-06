@@ -16,18 +16,18 @@ router.get('/', (req, res) => {
 });
 //recupération toute les annonce avec filtres km min max anneé min max price min max  avec envoie en formdata
 router.post("/filter", (req,res)=>{
-  console.log("kmmin:", kmmin);
-console.log("kmmax:", kmmax);
-console.log("annemin:", annemin);
-console.log("annemax:", annemax);
-console.log("pricemin:", pricemin);
-console.log("pricemax:", pricemax);
   const kmmin = req.body.kmmin;
   const kmmax = req.body.kmmax;
   const annemin = req.body.annemin;
   const annemax = req.body.annemax;
   const pricemin = req.body.pricemin;
   const pricemax = req.body.pricemax;
+  console.log("kmmin:", kmmin);
+  console.log("kmmax:", kmmax);
+  console.log("annemin:", annemin);
+  console.log("annemax:", annemax);
+  console.log("pricemin:", pricemin);
+  console.log("pricemax:", pricemax);
   pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_Voitures = Voitures.Id_Voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles WHERE Voitures.kilometrage BETWEEN ? AND ? AND Voitures.Annee BETWEEN ? AND ? AND Voitures.Prix BETWEEN ? AND ?', [kmmin, kmmax, annemin, annemax, pricemin, pricemax], (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
