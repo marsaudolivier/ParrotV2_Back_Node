@@ -14,6 +14,18 @@ router.get('/', (req, res) => {
     }
   });
 });
+//recupération toute les annonce avec filtres km min max
+router.get('/filtre/:min/:max', (req, res) => {
+  const min = req.params.min;
+  const max = req.params.max;
+  pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_Voitures = Voitures.Id_Voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles WHERE Voitures.kilometrage BETWEEN ? AND ? ', [min, max], (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json(results);
+    }
+  });
+});
 //Créaction d'une annonces Voiture avec photo et multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
