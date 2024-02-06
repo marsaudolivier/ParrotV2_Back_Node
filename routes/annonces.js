@@ -16,6 +16,12 @@ router.get('/', (req, res) => {
 });
 //recupération toute les annonce avec filtres km min max anneé min max price min max  avec envoie en formdata
 router.post("/filter", (req,res)=>{
+  console.log("kmmin:", kmmin);
+console.log("kmmax:", kmmax);
+console.log("annemin:", annemin);
+console.log("annemax:", annemax);
+console.log("pricemin:", pricemin);
+console.log("pricemax:", pricemax);
   const kmmin = req.body.kmmin;
   const kmmax = req.body.kmmax;
   const annemin = req.body.annemin;
