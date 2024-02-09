@@ -24,6 +24,25 @@ router.get('/:id', (req, res) => {
     }
   });
 });
+//test si utilisateur a le droit de se connecter
+router.post('/login', (req, res) => {
+  const data = req.body;
+  pool.query('SELECT * FROM `Utilisateurs` WHERE `mail` = ?', data.mail, (error, results, fields) => {
+    if (results.length > 0) {
+      const bcrypt = require('bcrypt');
+      const hash = results[0].mdp;
+      const myPlaintextPassword = data.mdp;
+      const isMatch = bcrypt.compareSync(myPlaintextPassword, hash);
+      if (isMatch) {
+        res.json({ message: 'Utilisateur connecté avec succès!' });
+      } else {
+        res.json({ message: 'Mot de passe incorrect!' });
+      }
+    } else {
+      res.json({ message: 'Utilisateur non trouvé!' });
+    }
+  });
+});
 //modification utilisateur
 router.put('/:id', (req, res) => {
   const id = req.params.id;
@@ -77,6 +96,7 @@ router.post('/', (req, res) => {
     }
   });
 });
+
 
 
 module.exports = router;
