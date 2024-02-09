@@ -35,12 +35,6 @@ router.post('/login', (req, res) => {
       const isMatch = bcrypt.compareSync(myPlaintextPassword, hash);
       if (isMatch) {
         res.json({ message: 'Utilisateur connecté avec succès!' });
-        //génère un token pour l'utilisateur et envoi cooki
-        const jwt = require('jsonwebtoken');
-        const token = jwt.sign({ mail
-        }, 'secret');
-        res.cookie('token', token, { httpOnly: true });
-        res.json({ message: 'Utilisateur connecté avec succès!', token: token });
         } else {
         res.json({ message: 'Mot de passe incorrect!' });
       }
