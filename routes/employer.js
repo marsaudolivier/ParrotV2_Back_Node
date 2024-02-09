@@ -53,7 +53,7 @@ router.post("/login", (req, res) => {
               if (err) {
                 res.json({ message: err.message });
               } else {
-                //retourne le mail et le token en cookie cooki duré de vie de 3600 secondes
+                //retourne le mail et le token en cookie cooki duré de vie de 3600 seconde
                 res.cookie("token", token, { maxAge: 3600000 });
                 res.json({ message: "Connexion ok" });
               }
