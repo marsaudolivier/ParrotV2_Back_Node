@@ -40,11 +40,8 @@ router.post('/login', (req, res) => {
       if (isMatch) {
         res.json({ message: 'Utilisateur connecté avec succès!' });
         //création d'un clef hexa sur 40 caractère token connexion $token = bin2hex(random_bytes(40));
-        const token = token();
-        console.log(`Token : ${token}`);
-        //enregistrement du token dans la base de données
-        pool.query("UPDATE `Utilisateurs` SET `Token`=? WHERE `mail`=?", [token, data.mail]);
-        res.json({ message: 'Utilisateur connecté avec succès!', token: token });
+
+
     } else {
       res.json({ message: 'Utilisateur non trouvé!' });
     }
