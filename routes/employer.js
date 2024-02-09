@@ -55,7 +55,7 @@ router.post("/login", (req, res) => {
               } else {
                 //retourne le mail et le token en cookie cooki
                 res.cookie("token", token, { httpOnly: true });
-                res.json({ message: "Connexion ok" });
+                res.json({ message: "Connexion ok", mail: data.mail, token: token});
               }
             }
           );
