@@ -2,7 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db'); 
-
+const crypto = require('crypto');
+//fonction pour générer un token
+function token() {
+  return crypto.createHash('sha1').update((Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))).digest('hex');
+}
 // Récupérer tous les utilisateur
 router.get('/', (req, res) => {
   pool.query('SELECT * FROM Utilisateurs', (error, results, fields) => {
@@ -35,13 +39,25 @@ router.post('/login', (req, res) => {
       const isMatch = bcrypt.compareSync(myPlaintextPassword, hash);
       if (isMatch) {
         res.json({ message: 'Utilisateur connecté avec succès!' });
-        
-
+        //création d'un clef hexa sur 40 caractère token connexion $token = bin2hex(random_bytes(40));
+        const token = token();
+        console.log(`Token : ${token}`);
+        //enregistrement du token dans la base de données
+        pool.query("UPDATE `Utilisateurs` SET `Token`=? WHERE `mail`=?", [token, data.mail]);
+        res.json({ message: 'Utilisateur connecté avec succès!', token: token });
     } else {
       res.json({ message: 'Utilisateur non trouvé!' });
     }
-  });
+  } else {
+    console.log(error);
+    res.json({ message: 'Utilisateur non trouvé!' });
+  }
 });
+});
+
+
+
+
         
 
 //modification utilisateur
