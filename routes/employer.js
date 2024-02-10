@@ -11,7 +11,7 @@ function generateToken(mail, Id_Roles) {
   };
 
   // Générer le token avec une clé secrète (vous devez utiliser une clé secrète forte en production)
-  const token = jwt.sign(payload, 'test', { expiresIn: '1h' }); // expiresIn définit la durée de validité du token
+  const token = jwt.sign(payload, 'Marsaudoliviertest', { expiresIn: '1h' }); // expiresIn définit la durée de validité du token
 
   return token;
 }
@@ -66,7 +66,7 @@ router.post("/login", (req, res) => {
           return res.status(401).json({ message: "Mot de passe incorrect!" });
         }
 
-        const token = generateToken(user.mail, user.role);
+        const token = generateToken(user.mail, user.Id_Roles);
         //ajout du token en bdd avant envoie cookie
         pool.query(
           "UPDATE `Utilisateurs` SET `token` = ? WHERE `mail` = ?",
