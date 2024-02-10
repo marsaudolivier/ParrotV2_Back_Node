@@ -53,9 +53,11 @@ router.post("/login", (req, res) => {
               if (err) {
                 res.json({ message: err.message });
               } else {
-                //retourne le mail et le token en cookie cooki
+                //retourne le mail et le token en cookie cooki ainsi que le role
                 res.cookie("token", token, { httpOnly: true });
-                res.json({ message: "Connexion ok", mail: data.mail, token: token});
+                res.cookie("mail", data.mail, { httpOnly: true });
+                res.cookie("role", results[0].Id_Roles, { httpOnly: true });
+                res.json({ mail: data.mail, token: token, role: results[0].Id_Roles });
               }
             }
           );
