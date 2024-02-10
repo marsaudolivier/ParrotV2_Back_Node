@@ -47,7 +47,7 @@ router.post("/login", (req, res) => {
           const token = crypto.randomBytes(40).toString("hex");
           //mise a jour de la table utilisateur avec  le token
           pool.query(
-            "UPDATE `Utilisateurs` SET `token` = ? WHERE `mail` = ?",
+            "UPDATE `Utilisateurs` INNER JOIN Roles ON Roles.Id_Roles = Utilisateurs.Id_Roles SET `token` = ? WHERE `mail` = ?",
             [token, data.mail],
             function (err, result) {
               if (err) {
