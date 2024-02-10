@@ -1,8 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-//fonction pour générer un token
+function generateToken(mail, Id_Roles) {
+  const payload = {
+    mail: mail,
+    Id_Roles: Id_Roles
+  };
+
+  // Générer le token avec une clé secrète (vous devez utiliser une clé secrète forte en production)
+  const token = jwt.sign(payload, 'test', { expiresIn: '1h' }); // expiresIn définit la durée de validité du token
+
+  return token;
+}
 
 // Récupérer tous les utilisateur
 router.get("/", (req, res) => {
@@ -31,40 +43,43 @@ router.get("/:id", (req, res) => {
 });
 //test si utilisateur a le droit de se connecter et retourne mail et Tokken généré
 router.post("/login", (req, res) => {
-  const data = req.body;
+  const { mail, mdp } = req.body;
+
   pool.query(
     "SELECT * FROM `Utilisateurs` WHERE `mail` = ?",
-    data.mail,
+    mail,
     (error, results, fields) => {
-      if (results.length > 0) {
-        const bcrypt = require("bcrypt");
-        const hash = results[0].mdp;
-        const myPlaintextPassword = data.mdp;
-        const isMatch = bcrypt.compareSync(myPlaintextPassword, hash);
-        if (isMatch) {
-          //création d'un clef hexa sur 40 caractère token connexion $token = bin2hex(random_bytes(40));
-          const crypto = require("crypto");
-          const token = crypto.randomBytes(40).toString("hex");
-          //mise a jour de la table utilisateur avec  le token
-          pool.query(
-            "UPDATE `Utilisateurs` INNER JOIN Roles ON Roles.Id_Roles = Utilisateurs.Id_Roles SET `token` = ? WHERE `mail` = ?",
-            [token, data.mail],
-            function (err, result) {
-              if (err) {
-                res.json({ message: err.message });
-              } else {
-                //retourne le mail et le token en cookie cooki ainsi que le role
-                res.cookie("token", token, { httpOnly: true });
-                res.cookie("mail", data.mail, { httpOnly: true });
-                res.cookie("role", results[0].Id_Roles, { httpOnly: true });
-                res.json({ mail: data.mail, token: token, role: results[0].Id_Roles });
-              }
-            }
-          );
-        } else {
-          res.json({ message: "Mot de passe incorrect!" });
-        }
+      if (error) {
+        return res.status(500).json({ message: error.message });
       }
+
+      if (results.length === 0) {
+        return res.status(401).json({ message: "Utilisateur non trouvé!" });
+      }
+
+      const user = results[0];
+      bcrypt.compare(mdp, user.mdp, (err, isMatch) => {
+        if (err) {
+          return res.status(500).json({ message: err.message });
+        }
+        if (!isMatch) {
+          return res.status(401).json({ message: "Mot de passe incorrect!" });
+        }
+
+        const token = generateToken(user.mail, user.role);
+        //ajout du token en bdd avant envoie cookie
+        pool.query(
+          "UPDATE `Utilisateurs` SET `token` = ? WHERE `mail` = ?",
+          [token, mail],
+          (error2, result) => {
+            if (error2) throw error2;
+          }
+        );
+        res.cookie("token", token, { httpOnly: true });
+        res.cookie("mail", user.mail, { httpOnly: true });
+        res.cookie("role", user.Id_Roles, { httpOnly: true });
+        res.json({ mail: user.mail, token: token, Id_Roles: user.Id_Roles });
+      });
     }
   );
 });
