@@ -91,6 +91,12 @@ router.post("/login", (req, res) => {
 router.put("/:id", (req, res) => {
   const id = req.params.id;
   const data = req.body;
+  const bcrypt = require("bcrypt");
+  const saltRounds = 10;
+  const myPlaintextPassword = data.mdp;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(myPlaintextPassword, salt);
+  data.mdp = hash;
   pool.query(
     "UPDATE `Utilisateurs` SET ? WHERE `Id_Utilisateurs` = ?",
     [data, id],
