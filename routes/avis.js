@@ -60,6 +60,17 @@ router.delete('/:id', (req, res) => {
     }
   });
 });
+// récupéré les avis par id
+router.get('/:id', (req, res) => {
+  const id = req.params.id;
+  pool.query('SELECT * FROM `Avis` WHERE Id_Avis = ?', id, (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json(results);
+    }
+  });
+});
 
 
 module.exports = router;
