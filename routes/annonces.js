@@ -86,7 +86,7 @@ router.post('/Voitures', (req, res) => {
 //recupération des  annonces par id
 router.get('/:id', (req, res) => {
   const id = req.params.id;
-  pool.query('SELECT * FROM `Annonces` WHERE Id_Annonces = ? ', id, (error, results, fields) => {
+  pool.query('SELECT * FROM `Annonces` INNER JOIN Voitures ON Annonces.Id_Voitures = Voitures.Id_Voitures INNER JOIN Marques ON Voitures.Id_Marques = Marques.Id_Marques INNER JOIN Modeles ON Voitures.Id_Modeles = Modeles.Id_Modeles  WHERE Id_Annonces = ? ', id, (error, results, fields) => {
     if (error) {
       res.json({ message: error.message });
     } else {
