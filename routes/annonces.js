@@ -48,6 +48,7 @@ router.post('/Voitures', (req, res) => {
     if (err) {
       return res.json({ message: err.message });
     }
+    console.log("files : ", req.files);
 
     const photoAddresses = req.files.map(file => `${file.filename}`);
     const data = { ...req.body, photo_principal: photoAddresses[0] };
@@ -60,6 +61,7 @@ router.post('/Voitures', (req, res) => {
       Prix: data.prix,
       photo_principal: data.photo_principal
     };
+    console.log(voiture);
 
     pool.query('INSERT INTO `Voitures` SET ?', voiture, (error, results, fields) => {
       if (error) {
@@ -72,7 +74,7 @@ router.post('/Voitures', (req, res) => {
         date_publication: new Date(),
         titre: data.titre
       };
-
+      
       pool.query('INSERT INTO `Annonces` SET ?', annonce, (error, results, fields) => {
         if (error) {
           return res.json({ message: error.message });
