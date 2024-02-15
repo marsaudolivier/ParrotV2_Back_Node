@@ -24,7 +24,7 @@ const servicesRouter = require('./routes/services')
 const motifsRouter = require('./routes/motifs')
 const optionsRouter = require('./routes/options')
 const connectRouter = require('./routes/connect')
-const marquesRouter = require('./routes/marques')
+const marquesRouter = require('./routes/marque')
 const modeleRouter = require('./routes/modele')
 
 
@@ -52,7 +52,7 @@ app.use('/Services', servicesRouter);
 app.use('/Motifs', motifsRouter);
 app.use('/Options', optionsRouter);
 app.use('/Connect', connectRouter);
-app.use('/Marques', marquesRouter);
+app.use('/marque', marquesRouter);
 app.use('/Modele', modeleRouter);
 
 app.use(function(req, res, next) {
