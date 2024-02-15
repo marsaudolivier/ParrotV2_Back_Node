@@ -42,32 +42,27 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}-${ext}`);
   }
 });
-const upload = multer({ 
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // limit size to 5MB if needed
-}).single('photo_principal');
-
+const upload = multer({ storage }).array('photo_principal',10);
 router.post('/Voitures', (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       return res.json({ message: err.message });
     }
-    // Process other form data
-    const formData = req.body;
-    const photo_principal = req.file; // Get the uploaded file
-    console.log(photo_principal);
+    console.log("files : ", req.files);
 
-    // Construct the object to insert into the database
+    const photoAddresses = req.files.map(file => `${file.filename}`);
+    const data = { ...req.body, photo_principal: photoAddresses[0] };
+
     const voiture = {
-      Id_Marques: formData.Id_Marques,
-      Id_Modeles: formData.Id_Modeles,
-      Annee: formData.annee,
-      Kilometrage: formData.kilometrage,
-      Prix: formData.prix,
-      photo_principal: photo_principal.filename // Assuming filename is stored in the file object
+      Id_Marques: data.Id_Marques,
+      Id_Modeles: data.Id_Modeles,
+      Annee: data.annee,
+      Kilometrage: data.kilometrage,
+      Prix: data.prix,
+      photo_principal: data.photo_principal
     };
+    console.log(voiture);
 
-    // Insert into the database
     pool.query('INSERT INTO `Voitures` SET ?', voiture, (error, results, fields) => {
       if (error) {
         return res.json({ message: error.message });
@@ -77,10 +72,9 @@ router.post('/Voitures', (req, res) => {
       const annonce = {
         Id_Voitures: id_voiture,
         date_publication: new Date(),
-        titre: formData.titre
+        titre: data.titre
       };
       
-      // Insert into the Annonces table
       pool.query('INSERT INTO `Annonces` SET ?', annonce, (error, results, fields) => {
         if (error) {
           return res.json({ message: error.message });
@@ -91,7 +85,6 @@ router.post('/Voitures', (req, res) => {
     });
   });
 });
-
 //recupération des  annonces par id
 router.get('/:id', (req, res) => {
   const id = req.params.id;
