@@ -52,10 +52,10 @@ router.post('/Voitures', (req, res) => {
     if (err) {
       return res.json({ message: err.message });
     }
-    
     // Process other form data
     const formData = req.body;
     const photo_principal = req.file; // Get the uploaded file
+    console.log(photo_principal);
 
     // Construct the object to insert into the database
     const voiture = {
