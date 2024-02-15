@@ -14,6 +14,18 @@ router.get('/', (req, res) => {
   });
 }
 );
+//récupération des modele par Id_Marques
+router.get('/:id', (req, res) => {
+  const id = req.params.id;
+  pool.query('SELECT * FROM `Modeles` WHERE Id_Marques = ? ', id, (error, results, fields) => {
+    if (error) {
+      res.json({ message: error.message });
+    } else {
+      res.json(results);
+    }
+  });
+}
+);
 
 
 
