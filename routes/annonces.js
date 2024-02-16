@@ -42,15 +42,15 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}-${ext}`);
   }
 });
-const upload = multer({ storage }).array('photo_principal',10);
-router.post('/Voitures', (req, res) => {
+const upload = multer({ storage }).array("photo_principal", 10);
+router.post("/Voitures", (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       return res.json({ message: err.message });
     }
     console.log("files : ", req.files);
 
-    const photoAddresses = req.files.map(file => `${file.filename}`);
+    const photoAddresses = req.files.map((file) => `${file.filename}`);
     const data = { ...req.body, photo_principal: photoAddresses[0] };
 
     const voiture = {
@@ -59,32 +59,67 @@ router.post('/Voitures', (req, res) => {
       Annee: data.annee,
       Kilometrage: data.kilometrage,
       Prix: data.prix,
-      photo_principal: data.photo_principal
+      photo_principal: data.photo_principal,
+      //récupération tableau option
+      options: data.options,
+      //récupération tableau energie
+      energie: data.energie,
     };
     console.log(voiture);
 
-    pool.query('INSERT INTO `Voitures` SET ?', voiture, (error, results, fields) => {
-      if (error) {
-        return res.json({ message: error.message });
-      }
-
-      const id_voiture = results.insertId;
-      const annonce = {
-        Id_Voitures: id_voiture,
-        date_publication: new Date(),
-        titre: data.titre
-      };
-      
-      pool.query('INSERT INTO `Annonces` SET ?', annonce, (error, results, fields) => {
+    pool.query(
+      "INSERT INTO `Voitures` SET ?",
+      voiture,
+      (error, results, fields) => {
         if (error) {
           return res.json({ message: error.message });
         }
 
-        res.json({ message: 'Annonces ajouté avec succès!' });
-      });
-    });
-  });
+        const id_voiture = results.insertId;
+        const annonce = {
+          Id_Voitures: id_voiture,
+          date_publication: new Date(),
+          titre: data.titre,
+        };
+
+        pool.query(
+          "INSERT INTO `Annonces` SET ?",
+          annonce,
+          (error, results, fields) => {
+            if (error) {
+              return res.json({ message: error.message });
+            }
+
+            res.json({ message: "Annonces ajouté avec succès!" });
+          }//insersion des options choisit dans la table avoir avec Id_Voitures et Id_Options
+          );
+          const options = data.options.map((option) => [id_voiture, option]);
+          pool.query(
+            "INSERT INTO `Avoir` (Id_Voitures, Id_Options) VALUES ?",
+            [options],
+            (error, results, fields) => {
+              if (error) {
+                return res.json({ message: error.message });
+              }
+            }
+          );
+      }//insersion des energies choisit dans la table consommer avec Id_Voitures et Id_Energies
+      );
+      const energies = data.energie.map((energie) => [id_voiture, energie]);
+      pool.query(
+        "INSERT INTO `Consommer` (Id_Voitures, Id_Energies) VALUES ?",
+        [energies],
+        (error, results, fields) => {
+          if (error) {
+            return res.json({ message: error.message });
+          }
+        }
+      );
+    },
+  );
 });
+
+
 //recupération des  annonces par id
 router.get('/:id', (req, res) => {
   const id = req.params.id;
