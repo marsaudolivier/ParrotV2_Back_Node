@@ -102,12 +102,11 @@ router.post("/Voitures", (req, res) => {
               }
             }
           );
-      }//insersion des energies choisit dans la table consommer avec Id_Voitures et Id_Energies
+      }
       );
-      pool.query(
-        "INSERT INTO `Consommer` (Id_Voitures, Id_Energies) VALUES ?",
-        [energies],
-        (error, results, fields) => {
+      //insersion des consommation d'energie choisit dans la table consommer avec Id_Voitures et Id_Energies
+      const Id_Energies = data.energie.map((energie) => [id_voiture, energie]);
+      pool.query("INSERT INTO `Consommer` (Id_Voitures, Id_Energies) VALUES ?", [Id_Energies], (error, results, fields) => {
           if (error) {
             return res.json({ message: error.message });
           }
