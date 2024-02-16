@@ -90,11 +90,15 @@ router.post("/Voitures", (req, res) => {
             }
 
             res.json({ message: "Annonces ajouté avec succès!" });
-          }//insersion des options choisit dans la table avoir avec Id_Voitures et Id_Options
+          }
           );
+          console.log(id_voiture);
           //pour chaque option du tableau options on insere dans la table avoir avec une boucle for each
-          data.options.forEach((option) => {
+          const options = data.options;
+          console.log(options);
+          options.forEach((option) => {
             pool.query(
+              console.log(option),
               "INSERT INTO `Avoir` SET ?",
               { Id_Voitures: id_voiture, Id_Options: option },
               (error, results, fields) => {
@@ -103,13 +107,13 @@ router.post("/Voitures", (req, res) => {
                 }
               }
             );
-          }
-          );
+          });
+        });
           }
     );
   }
   );
-});
+
 
 
 //recupération des  annonces par id
