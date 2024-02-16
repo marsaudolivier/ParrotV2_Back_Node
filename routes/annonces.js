@@ -62,8 +62,7 @@ router.post("/Voitures", (req, res) => {
       photo_principal: data.photo_principal,
       //récupération tableau option
       options: data.options,
-      //récupération tableau energie
-      energie: data.energie,
+      Id_Energies: data.energie,
     };
     console.log(voiture);
 
@@ -105,7 +104,6 @@ router.post("/Voitures", (req, res) => {
           );
       }//insersion des energies choisit dans la table consommer avec Id_Voitures et Id_Energies
       );
-      const energies = data.energie.map((energie) => [id_voiture, energie]);
       pool.query(
         "INSERT INTO `Consommer` (Id_Voitures, Id_Energies) VALUES ?",
         [energies],
