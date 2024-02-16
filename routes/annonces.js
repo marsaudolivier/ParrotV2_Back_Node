@@ -99,7 +99,7 @@ router.post("/Voitures", (req, res) => {
           options.forEach((option) => {
             pool.query(
               console.log(option),
-              "INSERT INTO `Avoir` SET ?",
+              "INSERT INTO `avoir` SET ?",
               { Id_Voitures: id_voiture, Id_Options: option },
               (error, results, fields) => {
                 if (error) {
