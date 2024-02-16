@@ -93,15 +93,18 @@ router.post("/Voitures", (req, res) => {
           }//insersion des options choisit dans la table avoir avec Id_Voitures et Id_Options
           );
           //pour chaque option du tableau options on insere dans la table avoir avec une boucle for each
-          array.forEach(element => {
-            const Id_Options = data.options.map((option) => [id_voiture, option]);
-          });
-          pool.query("INSERT INTO `Avoir` (Id_Voitures, Id_Options) VALUES ?", [Id_Options], (error, results, fields) => {
+          array.forEach(options => {
+            Id_Options = options;
+            pool.query("INSERT INTO `Avoir` (Id_Voitures, Id_Options) VALUES ?", [Id_Options], (error, results, fields) => {
               if (error) {
                 return res.json({ message: error.message });
               }
-            }
-          );
+            })
+            
+            
+           
+       
+          
 
 
   
