@@ -95,7 +95,6 @@ router.post("/Voitures", (req, res) => {
             }
             console.log(id_voiture);
             //pour chaque option du tableau options on insere dans la table avoir avec une boucle for each
-            const options = data.options;
             console.log(options);
             options.forEach((option) => {
               pool.query(
