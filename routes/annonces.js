@@ -65,9 +65,6 @@ router.post("/Voitures", (req, res) => {
       Kilometrage: data.kilometrage,
       Prix: data.prix,
       photo_principal: data.photo_principal,
-      //récupération tableau option
-      options: data.options,
-      Id_Energies: data.energie,
     };
     // console.log(voiture);
 
@@ -93,33 +90,42 @@ router.post("/Voitures", (req, res) => {
             if (error) {
               return res.json({ message: error.message });
             }
-            console.log(id_voiture);
-            //pour chaque option du tableau options on insere dans la table avoir avec une boucle for each
-            console.log(options);
-            options.forEach((option) => {
+            //retour de mon Id_Voitures
+            const id_annonce = results.insertId;
+            const optionss = data.options;
+            console.log(typeof optionss);
+            const optionValues = Object.values(data.options);
+            const optionsArray = optionValues[0]
+              .split(",")
+              .map((option) => parseInt(option.trim()));
+
+            // Traiter chaque nombre individuellement
+            optionsArray.forEach((option) => {
               pool.query(
-                console.log(option),
                 "INSERT INTO `avoir` SET ?",
                 { Id_Voitures: id_voiture, Id_Options: option },
                 (error, results, fields) => {
                   if (error) {
                     return res.json({ message: error.message });
-                  }//si tout est ok on envoie un message de succès
-                  res.json({ message: "Annonces ajouté avec succès!" });
-
+                  }
+                  pool.query(
+                    "INSERT INTO `consommer` SET ?",
+                    { Id_Voitures: id_voiture, Id_Energies: data.energie },
+                    (error, results, fields) => {
+                      if (error) {
+                        return res.json({ message: error.message });
+                      }
+                    }
+                  );
                 }
               );
             });
-
-          
           }
         );
-       
       }
     );
   });
 });
-
 //recupération des  annonces par id
 router.get("/:id", (req, res) => {
   const id = req.params.id;
