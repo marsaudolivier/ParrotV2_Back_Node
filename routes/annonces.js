@@ -92,16 +92,20 @@ router.post("/Voitures", (req, res) => {
             res.json({ message: "Annonces ajouté avec succès!" });
           }//insersion des options choisit dans la table avoir avec Id_Voitures et Id_Options
           );
-          const options = data.options.map((option) => [id_voiture, option]);
-          pool.query(
-            "INSERT INTO `Avoir` (Id_Voitures, Id_Options) VALUES ?",
-            [options],
-            (error, results, fields) => {
+          //pour chaque option du tableau options on insere dans la table avoir avec une boucle for each
+          array.forEach(element => {
+            const Id_Options = data.options.map((option) => [id_voiture, option]);
+          });
+          pool.query("INSERT INTO `Avoir` (Id_Voitures, Id_Options) VALUES ?", [Id_Options], (error, results, fields) => {
               if (error) {
                 return res.json({ message: error.message });
               }
             }
           );
+
+
+  
+          
       }
       );
       //insersion des consommation d'energie choisit dans la table consommer avec Id_Voitures et Id_Energies
