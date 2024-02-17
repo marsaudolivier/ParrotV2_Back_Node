@@ -66,7 +66,6 @@ router.post("/Voitures", (req, res) => {
       Prix: data.prix,
       photo_principal: data.photo_principal,
     };
-    // console.log(voiture);
 
     pool.query(
       "INSERT INTO `Voitures` SET ?",
@@ -90,16 +89,13 @@ router.post("/Voitures", (req, res) => {
             if (error) {
               return res.json({ message: error.message });
             }
-            //retour de mon Id_Voitures
             const id_annonce = results.insertId;
             const optionss = data.options;
-            console.log(typeof optionss);
             const optionValues = Object.values(data.options);
             const optionsArray = optionValues[0]
               .split(",")
               .map((option) => parseInt(option.trim()));
 
-            // Traiter chaque nombre individuellement
             optionsArray.forEach((option) => {
               pool.query(
                 "INSERT INTO `avoir` SET ?",
