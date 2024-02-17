@@ -153,48 +153,46 @@ router.get("/voiture/:id", (req, res) => {
   );
 });
 
-//Effacé annonces par id
+//Effacé annonces par id en récupérant Id_Voitures pour éffacé les options et consommation ennergie
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
   pool.query(
-    "DELETE FROM `Annonces` WHERE Id_annonces = ? ",
+    "SELECT Id_Voitures FROM `Annonces` WHERE Id_Annonces = ?",
     id,
     (error, results, fields) => {
       if (error) {
         res.json({ message: error.message });
       } else {
-        //récupéré Id_Voitures et effacé les option de la table avoir et les energie de la table consommer
+        const id_voiture = results[0].Id_Voitures;
         pool.query(
-          "SELECT Id_Voitures FROM `Annonces` WHERE Id_annonces = ? ",
-          id,
+          "DELETE FROM `avoir` WHERE Id_Voitures = ?",
+          id_voiture,
           (error, results, fields) => {
             if (error) {
               res.json({ message: error.message });
             } else {
-              const id_voiture = results[0].Id_Voitures;
               pool.query(
-                "DELETE FROM `avoir` WHERE Id_Voitures = ? ",
+                "DELETE FROM `consommer` WHERE Id_Voitures = ?",
                 id_voiture,
                 (error, results, fields) => {
                   if (error) {
                     res.json({ message: error.message });
                   } else {
                     pool.query(
-                      "DELETE FROM `consommer` WHERE Id_Voitures = ? ",
-                      id_voiture,
+                      "DELETE FROM `Annonces` WHERE Id_Annonces = ?",
+                      id,
                       (error, results, fields) => {
                         if (error) {
                           res.json({ message: error.message });
-                        } else {
-                          //supression de la voiture via sont Id_Voitures
+                        } else {//puis delete voiture
                           pool.query(
-                            "DELETE FROM `Voitures` WHERE Id_Voitures = ? ",
+                            "DELETE FROM `Voitures` WHERE Id_Voitures = ?",
                             id_voiture,
                             (error, results, fields) => {
                               if (error) {
                                 res.json({ message: error.message });
                               } else {
-                                res.json({ message: "Annonce supprimé" });
+                                res.json({ message: "Annonce effacée" });
                               }
                             }
                           );
