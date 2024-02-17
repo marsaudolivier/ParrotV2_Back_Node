@@ -167,10 +167,33 @@ router.delete("/:id", (req, res) => {
       if (error) {
         res.json({ message: error.message });
       } else {
-        res.json({ message: "Annonces effacé avec succès!" });
+        //récupéré Id_Voitures et effacé la voiture associer
+        pool.query(
+          "SELECT Id_Voitures FROM `Annonces` WHERE Id_annonces = ? ",
+          id,
+          (error, results, fields) => {
+            if (error) {
+              res.json({ message: error.message });
+            } else {
+              const id_voiture = results[0].Id_Voitures;
+              pool.query(
+                "DELETE FROM `Voitures` WHERE Id_Voitures = ? ",
+                id_voiture,
+                (error, results, fields) => {
+                  if (error) {
+                    res.json({ message: error.message });
+                  } else {
+                    res.json({ message: "Annonce effacé avec succès" });
+                  }
+                }
+              );
+            }
+          }
+        );
       }
     }
   );
 });
+    
 
 module.exports = router;
